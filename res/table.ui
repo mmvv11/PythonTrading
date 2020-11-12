@@ -30,7 +30,7 @@
     </column>
     <column>
      <property name="text">
-      <string>종가</string>
+      <string>가격</string>
      </property>
     </column>
     <column>
