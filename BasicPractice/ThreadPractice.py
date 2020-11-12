@@ -44,6 +44,7 @@ class RefreshData(QThread):
             return [None, None, None]
 
 
+
 class ThreadPractice(QMainWindow, form):
     def __init__(self):
         super(ThreadPractice, self).__init__()
