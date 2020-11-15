@@ -26,6 +26,7 @@ def get_target_price():
         print("목표가 갱신 시각:",
               "%04d/%02d/%02d %02d:%02d:%02d" % (
               now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec))
+        
     except:
         # todo 에러 로그 남기는 방법
         logger.error("hi")
