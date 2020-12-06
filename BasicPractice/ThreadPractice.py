@@ -44,7 +44,6 @@ class RefreshData(QThread):
             return [None, None, None]
 
 
-
 class ThreadPractice(QMainWindow, form):
     def __init__(self):
         super(ThreadPractice, self).__init__()
@@ -65,7 +64,6 @@ class ThreadPractice(QMainWindow, form):
                 self.tb_main.setItem(index, 1, QTableWidgetItem(str(info[0])))
                 self.tb_main.setItem(index, 2, QTableWidgetItem(str(info[1])))
                 self.tb_main.setItem(index, 3, QTableWidgetItem(str(info[2])))
-
         except:
             print("update_table_data error")
             pass

@@ -1,16 +1,30 @@
 """
-변동성 돌파전략을 이용한 비트코인 자동매매
+변동성 돌파전략과 이동평균 전략을 혼합한 자동매매
+기존 StrategyPractice 에서는 아무조건 없이 변동성 돌파전략을 적용
+여기서는 상승장일때만, 변동성 돌파전략이 적용되도록한다.
 """
 
-import pybithumb
 import time
+import pybithumb
 import schedule
 
 from BasicPractice.BitumbOfficialSampleCode.bithumb import bithumb
-# from BasicPractice.logger import *
 
 target_price = pybithumb.get_current_price("BTC")
 current_price = pybithumb.get_current_price("BTC")
+
+
+def get_yesterday_btc_ma5():
+    df = pybithumb.get_candlestick("BTC")
+    close = df['close']
+    ma5 = close.rolling(5).mean()
+    return ma5[-2]
+
+
+# 매도 시도 함수
+def sell_bitcoin():
+    unit = bithumb.get_balance("BTC")[0]  # 보유중인 비트코인 수량
+    bithumb.sell_market_order("BTC", unit)  # 매도
 
 
 # 목표가 갱신 함수
@@ -41,7 +55,10 @@ def get_target_price():
 # 매수기준: 당일 변동폭의 0.5배 이상 상승하면 해당 가격으로 바로 매수
 # 매도기준: 당일 종가 매도
 def buy_bitcoin():
-    if current_price > target_price: # 변동성 돌파 전략에 의해, 0.5배 이상 상승한 상태에서 바로 매수
+    """
+    변동성 돌파전략과 이동평균에 상승장일때만 매수주문을 체결
+    """
+    if (current_price > target_price) and (current_price > ma5):
         krw = bithumb.get_balance("BTC")[2]  # 보유중인 원화 조회
         order_book = pybithumb.get_orderbook("BTC")  # 비트코인 호가 정보 조회
         sell_price = order_book['asks'][0]['price']  # 최상단 매도 호가 조회 (가장 저렴하게 매수할 수 있는 가격)
@@ -49,17 +66,13 @@ def buy_bitcoin():
         bithumb.buy_market_order("BTC", unit)  # 매수
 
 
-# 매도 시도 함수
-def sell_bitcoin():
-    unit = bithumb.get_balance("BTC")[0]  # 보유중인 비트코인 수량
-    bithumb.sell_market_order("BTC", unit)  # 매도
-
-
 # 매일 자정에 목표가 갱신하기
 schedule.every().day.at("00:00").do(get_target_price)
 while True:
     try:
         schedule.run_pending()
+        # 어제 이동평균값
+        ma5 = get_yesterday_btc_ma5()
         buy_bitcoin()  # 매수 시도
     except:
         pass
