@@ -8,7 +8,7 @@ import time
 import pybithumb
 import schedule
 
-from BasicPractice.BitumbOfficialSampleCode.bithumb import bithumb
+from BasicPractice.BithumbPrivateAPI.bithumb import bithumb
 
 target_price = pybithumb.get_current_price("BTC")
 current_price = pybithumb.get_current_price("BTC")

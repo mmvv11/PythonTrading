@@ -127,4 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-BasicPractice/BitumbOfficialSampleCode/key_file.py
+BasicPractice/BithumbPrivateAPI/key_file.py
